@@ -17,6 +17,14 @@ class TodoBloc extends Bloc<TodoListEvent, TodoState> {
     } else if (event is TodoListCheck) {
       yield* _mapTodoListCheckToState(event.index);
     }
+    // 추가 부분
+    else if (event is AddDateChanged) {
+      yield* _mapAddDateChangedToState(event.date);
+    } else if (event is TodoAddPressed) {
+      yield* _mapTodoAddPressedToState(
+          event.id, event.title, event.date, event.contents
+      );
+    }
   }
 
   Stream<TodoState> _mapTodoPageLoadedToState() async* {
@@ -38,6 +46,21 @@ class TodoBloc extends Bloc<TodoListEvent, TodoState> {
     List<Todo> cTodoList = state.todoList;
     cTodoList[index] = currentTodo;
     yield state.update(todoList: cTodoList);
+  }
+
+  // 데이트를 받아 state를 업데이트 한다.
+  Stream<TodoState> _mapAddDateChangedToState(String date) async* {
+    yield state.update(date: date);
+  }
+
+  // 추가 버튼을 눌렀을 때 Todo model로 만들어 주어야 하고 만들어준 model을 리스트에 넣어준다. 그리고 갱신된 리스트로 state를 업데이트 시킨다.
+  Stream<TodoState> _mapTodoAddPressedToState(int id, String title, String date, String contents) async* {
+    Todo newTodo = Todo(id: id, title: title, date: date, contents: contents, checked: false);
+
+    List<Todo> currentTodo = state.todoList;
+    currentTodo.add(newTodo);
+
+    yield state.update(todoList: currentTodo);
   }
 }
 

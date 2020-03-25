@@ -57,7 +57,7 @@ class TodoState {
     );
   }
 
-  TodoState update({List<Todo> todoList}) {
+  TodoState update({List<Todo> todoList, String date}) {
     return copyWith(
       todoList: todoList,
     );

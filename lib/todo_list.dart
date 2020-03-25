@@ -14,6 +14,7 @@ class TodoList extends StatefulWidget {
 class _TodoList extends State<TodoList> {
   TodoBloc _todoBloc;
 
+
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +25,7 @@ class _TodoList extends State<TodoList> {
 
   @override
   Widget build(BuildContext context) {
+    print('check $context');
     // TODO: implement build
 
     return BlocListener(
@@ -46,32 +48,68 @@ class _TodoList extends State<TodoList> {
           body: BlocBuilder(
             bloc: _todoBloc,
             builder: (BuildContext context, TodoState state){
+              print('check@@@@ $state');
               return Column(
                 children: <Widget>[
                   Container(
                     height: MediaQuery.of(context).size.height /2,
                     child: ListView.separated( // .build 를 쓰면 divider 없이 사용 가능
                       itemCount: state.todoList.length,
+                      // ignore: missing_return
                       itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(state.todoList[index].title),
-                          onTap: () {
-                            _showDialog(state.todoList[index].title,
-                                state.todoList[index].contents
-                            );
-                          },
-                          leading: Checkbox(
-                            value: state.todoList[index].checked,
-                            onChanged: (bool newValue) {
-                              _todoBloc.add(TodoListCheck(index: index));
+                        if(state.todoList[index].checked==false) {
+                          return ListTile(
+                            title: Text(state.todoList[index].title),
+                            onTap: () {
+                              _showDialog(state.todoList[index].title,
+                                state.todoList[index].contents,
+                                state.todoList[index].date,
+                                state.todoList[index].checked,
+                              );
                             },
-                          ),
-                        );
+                            leading: Checkbox(
+                              value: state.todoList[index].checked,
+                              onChanged: (bool newValue) {
+                                _todoBloc.add(TodoListCheck(index: index));
+                              },
+                            ),
+                          );
+                        }
                       },
                       // separatorBuilder 가 있어야 divider 가 제대로 적용된다. 없이 사용하려면 지우기!
                       separatorBuilder: (context, index) {
                         return Divider();
                       }),
+                  ),
+                  Container(
+                    height: MediaQuery.of(context).size.height/5,
+                    child: ListView.separated(
+                        itemCount: state.todoList.length,
+                        // ignore: missing_return
+                        itemBuilder: (BuildContext context, int index){
+                          if(state.todoList[index].checked==true) {
+                            return ListTile(
+                              title: Text(state.todoList[index].title),
+                              onTap: () {
+                                _showDialog(state.todoList[index].title,
+                                  state.todoList[index].contents,
+                                  state.todoList[index].date,
+                                  state.todoList[index].checked,
+                                );
+                              },
+                              leading: Checkbox(
+                                value: state.todoList[index].checked,
+                                onChanged: (bool newValue) {
+                                  _todoBloc.add(TodoListCheck(index: index));
+                                },
+                              ),
+                            );
+                          }
+                        },
+                        separatorBuilder: (context, index) {
+                          return Divider();
+                        },
+                    ),
                   )
                 ],
               );
@@ -82,7 +120,8 @@ class _TodoList extends State<TodoList> {
 
   // 눌렀을때 부가적인 설명에 대한 dialog가 나올 수 이도록 하기 위한 작업
   // 일단은 title, contents를 받아 다이얼로그 페이지에 보일 수 있게 하자.
-void _showDialog(String title, String contents) async {
+void _showDialog(String title, String contents, String date, bool checked) async {
+  print('check date: $date');
     showDialog(
       context: context,
       barrierDismissible: false, // user must tap button!

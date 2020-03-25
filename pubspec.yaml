@@ -25,6 +25,8 @@ dependencies:
   flutter_bloc: ^2.0.0
   # object의 내용이 같더라도 다른 object로 감지하는것을 방지하기 위한 패키지
   equatable: ^0.2.0
+  # DateFormat을 위한 패캐지
+  intl: ^0.15.7
 
 
 

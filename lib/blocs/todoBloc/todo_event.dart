@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterapptodo/todo_add.dart';
 
 @immutable
 abstract class TodoListEvent extends Equatable {
@@ -26,5 +27,42 @@ class TodoListCheck extends TodoListEvent {
   String toString() {
     // TODO: implement toString
     return "TodoListCheck";
+  }
+}
+
+// add 관련 이벤트 추가
+// AddDateChanged -> 달력에서 날짜 설정 이벤트
+class AddDateChanged extends TodoListEvent {
+  final String date;
+
+  AddDateChanged({
+    @required this.date,
+  });
+
+  String toString() {
+    // TODO: implement toString
+    return "AddDateChanged {date: $date}";
+  }
+}
+
+// TodoAddPressed -> 새로운 일정 추가하기 버튼 event
+// todo의 id, title, contenns, date를 받아 온다.
+class TodoAddPressed extends TodoListEvent {
+  final int id;
+  final String title;
+  final String date;
+  final String contents;
+
+  TodoAddPressed({
+    @required this.id,
+    @required this.title,
+    @required this.date,
+    @required this.contents,
+  });
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "TodoListCheck {id: $id, title: $title, date: $date, contents: $contents}";
   }
 }
